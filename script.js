@@ -219,7 +219,7 @@ function setupInteractions() {
                 pilot: ["PA28 pilot who still grips the armrest in turbulence", "Real flying, not Microsoft Flight Sim"],
                 consultant: ["PowerPoint warrior", "Professional meeting attender"],
                 '3d': ["Half the prints fail but we don't talk about that", "My room smells like melted plastic"],
-                golf: ["More time in the rough than on the fairway", "Professional ball hunter"],
+                golf: ["More time in the woods than Tiger Woods", "Professional ball donor to nature", "Golf courses hate this one trick: never finding the fairway", "Should probably just take up mini golf"],
                 spontaneous: ["'Just a quick look' at flights = 3 hour rabbit hole", "Trip planning is my cardio"],
                 code: ["console.log() is my debugging strategy", "// TODO: learn how this actually works"]
             };
