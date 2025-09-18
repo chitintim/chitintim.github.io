@@ -13,7 +13,7 @@ const taglines = [
 const obsessions = [
     "skiing",
     "CAD modelling",
-    "flight sim",
+    "flying (real planes, not sims)",
     "3D printing",
     "optimising spreadsheets",
     "golf (badly)",
@@ -198,7 +198,7 @@ function setupInteractions() {
             // Random comment based on fact type
             const factType = card.dataset.fact;
             const comments = {
-                pilot: ["Love flying, hate heights. Make it make sense", "Ex-Rolls-Royce (the jet engines, not the posh cars)"],
+                pilot: ["PA28 pilot who still grips the armrest in turbulence", "Real flying, not Microsoft Flight Sim"],
                 consultant: ["PowerPoint warrior", "Professional meeting attender"],
                 '3d': ["Half the prints fail but we don't talk about that", "My room smells like melted plastic"],
                 golf: ["More time in the rough than on the fairway", "Professional ball hunter"],
