@@ -95,7 +95,7 @@ aeroplane          airplane
 1. **Wind Calculator** - Actually useful for flight planning (he has a PPL and uses this)
 2. **Sailing GPS** - "Used it once, probably broken" but actually works
 3. **Ski Trip Pages** - Multiple because "has a problem"
-4. **Temple Website** - The ONLY serious project (for parents)
+4. **Temple Website** - The ONLY serious project (for relatives)
 
 ## ⚙️ Site Features (Non-Negotiable)
 
