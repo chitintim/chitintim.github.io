@@ -86,8 +86,8 @@ h1 {
 }
 
 .status-bar {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 10px;
     margin-bottom: 30px;
 }
@@ -97,18 +97,19 @@ h1 {
     align-items: center;
     gap: 8px;
     background: var(--card);
-    padding: 10px 12px;
+    padding: 12px 15px;
     border-radius: 20px;
-    white-space: nowrap;
-    font-size: 0.82rem;
-    min-width: 0;
-    overflow: hidden;
+    font-size: 0.9rem;
 }
 
 .status-item span:not(.status-emoji) {
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+    white-space: nowrap;
+}
+
+#skiDays, #coffeeCount {
+    font-weight: 600;
+    color: var(--accent2);
 }
 
 .status-emoji {
@@ -132,16 +133,8 @@ h1 {
 }
 
 .project-grid {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: 12px;
+    display: block;
     width: 100%;
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
 }
 
 .project-card {
@@ -155,9 +148,8 @@ h1 {
     color: var(--text);
     transition: all 0.2s;
     border: 1px solid transparent;
-    width: calc(50% - 6px);
-    max-width: 350px;
-    min-width: 280px;
+    margin-bottom: 12px;
+    width: 100%;
 }
 
 .project-card:hover {
@@ -313,8 +305,8 @@ h1 {
     border-radius: 25px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 18px;
+    gap: 6px;
+    padding: 10px 14px;
     cursor: pointer;
     transition: all 0.3s;
     z-index: 100;
@@ -322,19 +314,36 @@ h1 {
 }
 
 #widget-text {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    line-height: 1;
 }
 
 .widget-label {
     color: white;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .floating-widget:hover {
     transform: scale(1.05) translateY(-2px);
     background: var(--accent2);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 768px) {
+    .floating-widget {
+        padding: 8px 12px;
+        gap: 5px;
+    }
+
+    #widget-text {
+        font-size: 1.2rem;
+    }
+
+    .widget-label {
+        font-size: 0.75rem;
+    }
 }
 
 
@@ -362,9 +371,13 @@ h1 {
     }
 
     .status-bar {
-        grid-template-columns: repeat(3, 1fr);
-        max-width: 600px;
-        margin: 0 auto 30px;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .status-item {
+        flex: 0 1 auto;
     }
 
     .fact-grid {

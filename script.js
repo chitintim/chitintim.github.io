@@ -120,14 +120,14 @@ function calculateSkiDays() {
             const hours = Math.floor(diff / (1000 * 60 * 60));
             document.getElementById('skiDays').textContent = `${hours} hours!!!`;
         } else {
-            // Show days with 4 decimal places that tick down
-            document.getElementById('skiDays').textContent = days.toFixed(4);
+            // Show days with 6 decimal places that tick down
+            document.getElementById('skiDays').textContent = days.toFixed(6);
         }
     };
 
-    // Update immediately and then every 100ms for smooth countdown
+    // Update immediately and then every 10ms for smooth countdown
     updateCountdown();
-    setInterval(updateCountdown, 100);
+    setInterval(updateCountdown, 10);
 }
 
 // Update coffee count based on UK working hours
@@ -141,21 +141,21 @@ function updateCoffeeCount() {
 
         // Working hours: 8am to 4pm (8 hours total = 4 coffees)
         if (hours < 8) {
-            document.getElementById('coffeeCount').textContent = "0.000";
+            document.getElementById('coffeeCount').textContent = "0.00000";
         } else if (hours >= 16) {
-            document.getElementById('coffeeCount').textContent = "4.000";
+            document.getElementById('coffeeCount').textContent = "4.00000";
         } else {
             // Calculate coffee progress (0-4 over 8 hours)
-            const totalMinutes = (hours - 8) * 60 + minutes + (seconds / 60);
-            const totalWorkMinutes = 8 * 60; // 8 hours
-            const coffees = (totalMinutes / totalWorkMinutes) * 4;
-            document.getElementById('coffeeCount').textContent = coffees.toFixed(3);
+            const totalSeconds = (hours - 8) * 3600 + minutes * 60 + seconds;
+            const totalWorkSeconds = 8 * 3600; // 8 hours in seconds
+            const coffees = (totalSeconds / totalWorkSeconds) * 4;
+            document.getElementById('coffeeCount').textContent = coffees.toFixed(5);
         }
     };
 
-    // Update immediately and then every second
+    // Update immediately and then every 100ms for smooth increment
     updateCoffee();
-    setInterval(updateCoffee, 1000);
+    setInterval(updateCoffee, 100);
 }
 
 // Setup all interactions
