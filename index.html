@@ -20,15 +20,15 @@
     <div class="status-bar">
         <div class="status-item">
             <span class="status-emoji">📍</span>
-            <span>London (unfortunately)</span>
+            <span id="location">London</span>
         </div>
         <div class="status-item">
             <span class="status-emoji">🎿</span>
-            <span id="skiDays">??? days till next ski trip</span>
+            <span id="skiDays">Calculating...</span>
         </div>
         <div class="status-item">
             <span class="status-emoji">☕</span>
-            <span id="coffeeCount">Probably 3 coffees deep today</span>
+            <span id="coffeeCount">0.000 coffees</span>
         </div>
     </div>
 
@@ -143,6 +143,7 @@
 
     <div class="floating-widget" id="widget" onclick="makeItRain()">
         <span id="widget-text">❄️</span>
+        <span class="widget-label">Make it rain</span>
     </div>
 
     <script src="script.js"></script>

@@ -45,7 +45,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCoffeeCount();
     setupInteractions();
     startRandomEvents();
+    updateLocationTime();
 });
+
+// Update London time
+function updateLocationTime() {
+    const updateTime = () => {
+        const ukTime = new Date(new Date().toLocaleString("en-US", {timeZone: "Europe/London"}));
+        const timeStr = ukTime.toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        document.getElementById('location').textContent = `London ${timeStr}`;
+    };
+
+    updateTime();
+    setInterval(updateTime, 1000);
+}
 
 // Randomize content on load/refresh
 function randomizeContent() {
@@ -69,50 +85,77 @@ function randomizeContent() {
     document.getElementById('widget-text').textContent = widgetGreetings[Math.floor(Math.random() * widgetGreetings.length)];
 }
 
-// Calculate days till next ski trip
+// Calculate days till next ski trip with live countdown
 function calculateSkiDays() {
-    const now = new Date();
-    const currentYear = now.getFullYear();
+    const updateCountdown = () => {
+        const now = new Date();
+        const currentYear = now.getFullYear();
 
-    // Your known ski trips
-    const skiTrips = [
-        new Date(2025, 11, 28), // Dec 28, 2025 - La Tania
-        new Date(2026, 2, 21)   // March 21, 2026 - Japan
-    ];
+        // Your known ski trips
+        const skiTrips = [
+            new Date(2025, 11, 28), // Dec 28, 2025 - La Tania
+            new Date(2026, 2, 21)   // March 21, 2026 - Japan
+        ];
 
-    // Find the next upcoming trip
-    let nextTrip = null;
-    for (let trip of skiTrips) {
-        if (trip > now) {
-            nextTrip = trip;
-            break;
+        // Find the next upcoming trip
+        let nextTrip = null;
+        for (let trip of skiTrips) {
+            if (trip > now) {
+                nextTrip = trip;
+                break;
+            }
         }
-    }
 
-    if (!nextTrip) {
-        // If no trips scheduled, default to next December
-        nextTrip = new Date(currentYear + 1, 11, 1);
-    }
+        if (!nextTrip) {
+            // If no trips scheduled, default to next December
+            nextTrip = new Date(currentYear + 1, 11, 1);
+        }
 
-    const days = Math.floor((nextTrip - now) / (1000 * 60 * 60 * 24));
+        const diff = nextTrip - now;
+        const days = diff / (1000 * 60 * 60 * 24);
 
-    if (days === 0) {
-        document.getElementById('skiDays').textContent = "SKI TRIP TODAY!!!";
-    } else if (days === 1) {
-        document.getElementById('skiDays').textContent = "1 day till next ski trip";
-    } else {
-        document.getElementById('skiDays').textContent = `${days} days till next ski trip`;
-    }
+        if (days < 0) {
+            document.getElementById('skiDays').textContent = "ON THE SLOPES!!!";
+        } else if (days < 1) {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            document.getElementById('skiDays').textContent = `${hours} hours!!!`;
+        } else {
+            // Show days with 4 decimal places that tick down
+            document.getElementById('skiDays').textContent = `${days.toFixed(4)} days`;
+        }
+    };
+
+    // Update immediately and then every 100ms for smooth countdown
+    updateCountdown();
+    setInterval(updateCountdown, 100);
 }
 
-// Update coffee count based on time of day
+// Update coffee count based on UK working hours
 function updateCoffeeCount() {
-    const hour = new Date().getHours();
-    let coffees = Math.floor(hour / 3);
-    if (coffees === 0) coffees = 1;
-    if (coffees > 8) coffees = "way too many";
+    const updateCoffee = () => {
+        // Get UK time
+        const ukTime = new Date(new Date().toLocaleString("en-US", {timeZone: "Europe/London"}));
+        const hours = ukTime.getHours();
+        const minutes = ukTime.getMinutes();
+        const seconds = ukTime.getSeconds();
 
-    document.getElementById('coffeeCount').textContent = `Probably ${coffees} coffees deep today`;
+        // Working hours: 8am to 4pm (8 hours total = 4 coffees)
+        if (hours < 8) {
+            document.getElementById('coffeeCount').textContent = "0.000 coffees";
+        } else if (hours >= 16) {
+            document.getElementById('coffeeCount').textContent = "4.000 coffees";
+        } else {
+            // Calculate coffee progress (0-4 over 8 hours)
+            const totalMinutes = (hours - 8) * 60 + minutes + (seconds / 60);
+            const totalWorkMinutes = 8 * 60; // 8 hours
+            const coffees = (totalMinutes / totalWorkMinutes) * 4;
+            document.getElementById('coffeeCount').textContent = `${coffees.toFixed(3)} coffees`;
+        }
+    };
+
+    // Update immediately and then every second
+    updateCoffee();
+    setInterval(updateCoffee, 1000);
 }
 
 // Setup all interactions
