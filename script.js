@@ -109,7 +109,8 @@ function calculateSkiDays() {
 
         // Your known ski trips
         const skiTrips = [
-            new Date(2025, 11, 28), // Dec 28, 2025 - La Tania
+            new Date(2025, 11, 20), // Dec 20, 2025 - La Tania Christmas trip
+            new Date(2025, 11, 28), // Dec 28, 2025 - NYE La Tania
             new Date(2026, 2, 21)   // March 21, 2026 - Japan
         ];
 
