@@ -1,0 +1,18 @@
+# IDE and system files
+.DS_Store
+.vscode/
+.idea/
+
+# Instructions and documentation
+CLAUDE.md
+
+# Test files
+*-test.html
+*-test.js
+*-safe.js
+*-complete.js
+*-fixed.html
+
+# Temporary files
+*.tmp
+*.bak
