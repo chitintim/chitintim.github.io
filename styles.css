@@ -137,13 +137,13 @@ h1 {
     font-weight: 400;
 }
 
-.project-grid {
+.project-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.project-card {
+.project-item {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -156,7 +156,7 @@ h1 {
     border: 1px solid transparent;
 }
 
-.project-card:hover {
+.project-item:hover {
     transform: translateX(5px);
     border-color: var(--accent);
 }

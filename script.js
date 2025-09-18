@@ -35,7 +35,8 @@ const greetings = [
     "Hello, Tim's random corner",
     "Alright? Tim's weird page",
     "做乜嘢呀？(What you doing?)",
-    "Welcome to Tim's chaos"
+    "Welcome to Tim's chaos",
+    "Oh, hey there!"
 ];
 
 // Initialize
@@ -56,7 +57,10 @@ function updateLocationTime() {
             hour: '2-digit',
             minute: '2-digit'
         });
-        document.getElementById('location').textContent = `London ${timeStr}`;
+        const locationEl = document.getElementById('location');
+        if (locationEl) {
+            locationEl.textContent = `London ${timeStr}`;
+        }
     };
 
     updateTime();
@@ -67,22 +71,34 @@ function updateLocationTime() {
 function randomizeContent() {
     // Random greeting
     const greeting = document.getElementById('greeting');
-    greeting.textContent = greetings[Math.floor(Math.random() * greetings.length)];
+    if (greeting) {
+        greeting.textContent = greetings[Math.floor(Math.random() * greetings.length)];
+    }
 
     // Random tagline
     const tagline = document.getElementById('tagline');
-    tagline.textContent = taglines[Math.floor(Math.random() * taglines.length)];
+    if (tagline) {
+        tagline.textContent = taglines[Math.floor(Math.random() * taglines.length)];
+    }
 
     // Random obsession
     const obsession = document.getElementById('obsession');
-    const randomObsession = obsessions[Math.floor(Math.random() * obsessions.length)];
-    obsession.textContent = randomObsession;
+    if (obsession) {
+        const randomObsession = obsessions[Math.floor(Math.random() * obsessions.length)];
+        obsession.textContent = randomObsession;
+    }
 
     // Random avatar mood
-    document.getElementById('avatar').textContent = avatars[Math.floor(Math.random() * avatars.length)];
+    const avatar = document.getElementById('avatar');
+    if (avatar) {
+        avatar.textContent = avatars[Math.floor(Math.random() * avatars.length)];
+    }
 
     // Random widget greeting
-    document.getElementById('widget-text').textContent = widgetGreetings[Math.floor(Math.random() * widgetGreetings.length)];
+    const widgetText = document.getElementById('widget-text');
+    if (widgetText) {
+        widgetText.textContent = widgetGreetings[Math.floor(Math.random() * widgetGreetings.length)];
+    }
 }
 
 // Calculate days till next ski trip with live countdown
@@ -114,14 +130,17 @@ function calculateSkiDays() {
         const diff = nextTrip - now;
         const days = diff / (1000 * 60 * 60 * 24);
 
-        if (days < 0) {
-            document.getElementById('skiDays').textContent = "ON THE SLOPES!!!";
-        } else if (days < 1) {
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            document.getElementById('skiDays').textContent = `${hours} hours!!!`;
-        } else {
-            // Show days with 6 decimal places that tick down
-            document.getElementById('skiDays').textContent = days.toFixed(6);
+        const skiDaysEl = document.getElementById('skiDays');
+        if (skiDaysEl) {
+            if (days < 0) {
+                skiDaysEl.textContent = "ON THE SLOPES!!!";
+            } else if (days < 1) {
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                skiDaysEl.textContent = `${hours} hours!!!`;
+            } else {
+                // Show days with 6 decimal places that tick down
+                skiDaysEl.textContent = days.toFixed(6);
+            }
         }
     };
 
@@ -139,17 +158,20 @@ function updateCoffeeCount() {
         const minutes = ukTime.getMinutes();
         const seconds = ukTime.getSeconds();
 
+        const coffeeEl = document.getElementById('coffeeCount');
+        if (!coffeeEl) return;
+
         // Working hours: 8am to 4pm (8 hours total = 4 coffees)
         if (hours < 8) {
-            document.getElementById('coffeeCount').textContent = "0.00000";
+            coffeeEl.textContent = "0.00000";
         } else if (hours >= 16) {
-            document.getElementById('coffeeCount').textContent = "4.00000";
+            coffeeEl.textContent = "4.00000";
         } else {
             // Calculate coffee progress (0-4 over 8 hours)
             const totalSeconds = (hours - 8) * 3600 + minutes * 60 + seconds;
             const totalWorkSeconds = 8 * 3600; // 8 hours in seconds
             const coffees = (totalSeconds / totalWorkSeconds) * 4;
-            document.getElementById('coffeeCount').textContent = coffees.toFixed(5);
+            coffeeEl.textContent = coffees.toFixed(5);
         }
     };
 
@@ -164,36 +186,31 @@ function setupInteractions() {
     let avatarClicks = 0;
     const avatar = document.getElementById('avatar');
 
-    avatar.addEventListener('click', () => {
-        avatarClicks++;
-        avatar.classList.add('spinning');
-        setTimeout(() => avatar.classList.remove('spinning'), 500);
+    if (avatar) {
+        avatar.addEventListener('click', () => {
+            avatarClicks++;
+            avatar.classList.add('spinning');
+            setTimeout(() => avatar.classList.remove('spinning'), 500);
 
-        if (avatarClicks === 5) {
-            document.body.classList.add('shake');
-            setTimeout(() => document.body.classList.remove('shake'), 500);
-            avatarClicks = 0;
-            showToast("Stop clicking me! 😵");
-        }
-    });
-
-    // Floating widget menu toggle
-    const widget = document.getElementById('widget');
-    const secretMenu = document.getElementById('secretMenu');
-
-    widget.addEventListener('click', () => {
-        widget.classList.toggle('active');
-        secretMenu.classList.toggle('show');
-    });
+            if (avatarClicks === 5) {
+                document.body.classList.add('shake');
+                setTimeout(() => document.body.classList.remove('shake'), 500);
+                avatarClicks = 0;
+                showToast("Stop clicking me! 😵");
+            }
+        });
+    }
 
     // Fact cards interactions
     document.querySelectorAll('.fact-card').forEach(card => {
         card.addEventListener('click', () => {
             const emoji = card.querySelector('.fact-emoji');
-            emoji.style.transform = 'scale(1.5) rotate(360deg)';
-            setTimeout(() => {
-                emoji.style.transform = '';
-            }, 300);
+            if (emoji) {
+                emoji.style.transform = 'scale(1.5) rotate(360deg)';
+                setTimeout(() => {
+                    emoji.style.transform = '';
+                }, 300);
+            }
 
             // Random comment based on fact type
             const factType = card.dataset.fact;
@@ -212,8 +229,8 @@ function setupInteractions() {
         });
     });
 
-    // Project hover effects
-    document.querySelectorAll('.project-card').forEach((item, index) => {
+    // Project hover effects with animation
+    document.querySelectorAll('.project-item').forEach((item, index) => {
         item.style.animationDelay = `${index * 0.1}s`;
         item.style.animation = 'slideUp 0.5s ease-out forwards';
     });
@@ -231,23 +248,28 @@ function startRandomEvents() {
         ];
 
         const bio = document.getElementById('bio');
-        const currentObsession = document.getElementById('obsession').textContent;
-        bio.innerHTML = bioVariations[Math.floor(Math.random() * bioVariations.length)] +
-                       ` Perpetually obsessed with <span id="obsession">${currentObsession}</span>.`;
+        const obsessionEl = document.getElementById('obsession');
+        if (bio && obsessionEl) {
+            const currentObsession = obsessionEl.textContent;
+            bio.innerHTML = bioVariations[Math.floor(Math.random() * bioVariations.length)] +
+                           ` Perpetually obsessed with <span id="obsession">${currentObsession}</span>.`;
+        }
     }, 30000); // Every 30 seconds
 
     // Occasional avatar mood swings
     setInterval(() => {
         const avatar = document.getElementById('avatar');
-        const oldAvatar = avatar.textContent;
-        const newAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+        if (avatar) {
+            const oldAvatar = avatar.textContent;
+            const newAvatar = avatars[Math.floor(Math.random() * avatars.length)];
 
-        if (oldAvatar !== newAvatar) {
-            avatar.style.transform = 'scale(0)';
-            setTimeout(() => {
-                avatar.textContent = newAvatar;
-                avatar.style.transform = 'scale(1)';
-            }, 150);
+            if (oldAvatar !== newAvatar) {
+                avatar.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    avatar.textContent = newAvatar;
+                    avatar.style.transform = 'scale(1)';
+                }, 150);
+            }
         }
     }, 15000); // Every 15 seconds
 }
@@ -279,15 +301,7 @@ function showToast(message) {
     }, 2000);
 }
 
-// Secret menu functions
-function enableChaosMode() {
-    document.body.classList.add('chaos-mode');
-    showToast("CHAOS MODE ACTIVATED 🌈");
-    setTimeout(() => {
-        document.body.classList.remove('chaos-mode');
-    }, 5000);
-}
-
+// Make it rain function
 function makeItRain() {
     const snowflakes = ['❄️', '❄️', '❄️', '❅', '❆', '❄️'];
 
@@ -311,7 +325,6 @@ function makeItRain() {
     }, 500);
 }
 
-
 // Console easter eggs
 console.log('%c Welcome to the source code! 🎮', 'font-size: 16px; color: #ff6b6b; font-weight: bold;');
 console.log('%c Click the snowflake for a surprise ❄️', 'font-size: 12px; color: #4ecdc4;');
@@ -325,13 +338,3 @@ document.addEventListener('visibilitychange', () => {
         document.title = originalTitle;
     }
 });
-
-// Add some CSS for the toast animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideUp {
-        from { opacity: 0; transform: translate(-50%, 20px); }
-        to { opacity: 1; transform: translate(-50%, 0); }
-    }
-`;
-document.head.appendChild(style);
