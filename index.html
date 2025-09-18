@@ -385,6 +385,27 @@
             transition: opacity 0.3s ease;
         }
 
+        @keyframes powderPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes powderPopOut {
+            to {
+                transform: translate(-50%, -50%) scale(0) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
         @media (min-width: 768px) {
             .container {
                 padding: 40px 20px;

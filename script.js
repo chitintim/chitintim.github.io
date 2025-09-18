@@ -289,30 +289,63 @@ function startRandomEvents() {
 }
 
 // Toast notifications
-function showToast(message) {
+function showToast(message, isPowderTime = false) {
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.textContent = message;
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 100px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--accent);
-        color: white;
-        padding: 12px 24px;
-        border-radius: 25px;
-        font-size: 0.9rem;
-        z-index: 1000;
-        animation: slideUp 0.3s ease-out;
-    `;
+
+    // Check if it's the powder time message for special styling
+    if (isPowderTime) {
+        // Centre on screen, bigger for mobile
+        const isMobile = window.innerWidth < 768;
+        toast.innerHTML = message;
+        toast.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%);
+            color: white;
+            padding: ${isMobile ? '24px 36px' : '20px 32px'};
+            border-radius: 20px;
+            font-size: ${isMobile ? '1.4rem' : '1.1rem'};
+            font-weight: 700;
+            text-align: center;
+            z-index: 10000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(78, 205, 196, 0.3);
+            border: 3px solid white;
+            animation: powderPop 0.5s ease-out forwards;
+            min-width: ${isMobile ? '280px' : '250px'};
+        `;
+    } else {
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+        `;
+    }
 
     document.body.appendChild(toast);
 
+    // Keep duration similar so it doesn't block the snow
+    const duration = isPowderTime ? 2200 : 2000;
+
     setTimeout(() => {
-        toast.style.animation = 'slideUp 0.3s ease-out reverse';
+        if (isPowderTime) {
+            toast.style.animation = 'powderPopOut 0.3s ease-in forwards';
+        } else {
+            toast.style.animation = 'slideUp 0.3s ease-out reverse';
+        }
         setTimeout(() => toast.remove(), 300);
-    }, 2000);
+    }, duration);
 }
 
 // Make it rain function
@@ -335,7 +368,7 @@ function makeItRain() {
 
     // Prank message
     setTimeout(() => {
-        showToast("RAIN?! ABSOLUTELY NOT! IT'S POWDER TIME! ❄️");
+        showToast("❄️ POWDER TIME! ❄️<br>NOT RAIN!", true);
     }, 500);
 }
 
