@@ -87,7 +87,7 @@ h1 {
 
 .status-bar {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 10px;
     margin-bottom: 30px;
 }
@@ -100,7 +100,7 @@ h1 {
     padding: 10px 12px;
     border-radius: 20px;
     white-space: nowrap;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     min-width: 0;
     overflow: hidden;
 }

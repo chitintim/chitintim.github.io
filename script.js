@@ -121,7 +121,7 @@ function calculateSkiDays() {
             document.getElementById('skiDays').textContent = `${hours} hours!!!`;
         } else {
             // Show days with 4 decimal places that tick down
-            document.getElementById('skiDays').textContent = `${days.toFixed(4)} days`;
+            document.getElementById('skiDays').textContent = days.toFixed(4);
         }
     };
 
@@ -141,15 +141,15 @@ function updateCoffeeCount() {
 
         // Working hours: 8am to 4pm (8 hours total = 4 coffees)
         if (hours < 8) {
-            document.getElementById('coffeeCount').textContent = "0.000 coffees";
+            document.getElementById('coffeeCount').textContent = "0.000";
         } else if (hours >= 16) {
-            document.getElementById('coffeeCount').textContent = "4.000 coffees";
+            document.getElementById('coffeeCount').textContent = "4.000";
         } else {
             // Calculate coffee progress (0-4 over 8 hours)
             const totalMinutes = (hours - 8) * 60 + minutes + (seconds / 60);
             const totalWorkMinutes = 8 * 60; // 8 hours
             const coffees = (totalMinutes / totalWorkMinutes) * 4;
-            document.getElementById('coffeeCount').textContent = `${coffees.toFixed(3)} coffees`;
+            document.getElementById('coffeeCount').textContent = coffees.toFixed(3);
         }
     };
 
