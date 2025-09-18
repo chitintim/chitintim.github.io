@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oh hi, it's Tim</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="avatar" id="avatar">🤷‍♂️</div>
+        <h1 id="greeting">Oh, hey there!</h1>
+        <p class="tagline" id="tagline">Jack of all trades, master of absolutely none</p>
+    </div>
+
+    <div class="bio-card">
+        <p id="bio">Hong Kong → London. Stuck in the corporate grind by day, tinkering with random projects by night. All gear, no idea. Perpetually obsessed with <span id="obsession">skiing</span>.</p>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-item">
+            <span class="status-emoji">📍</span>
+            <span>London (unfortunately)</span>
+        </div>
+        <div class="status-item">
+            <span class="status-emoji">🎿</span>
+            <span id="skiDays">??? days till next ski trip</span>
+        </div>
+        <div class="status-item">
+            <span class="status-emoji">☕</span>
+            <span id="coffeeCount">Probably 3 coffees deep today</span>
+        </div>
+    </div>
+
+    <div class="projects">
+        <h2>Stuff I Made <span class="subtitle">(with Claude doing 90% of the work)</span></h2>
+
+        <div class="project-grid">
+            <a href="https://chitintim.github.io/winddrift/" class="project-card" target="_blank">
+                <div class="project-emoji">✈️</div>
+                <div class="project-info">
+                    <h3>Wind Calculator Thing</h3>
+                    <p>For when I pretend I know how to fly</p>
+                </div>
+            </a>
+
+            <a href="https://chitintim.github.io/sail/" class="project-card" target="_blank">
+                <div class="project-emoji">⛵</div>
+                <div class="project-info">
+                    <h3>Sailing GPS Whatever</h3>
+                    <p>Used it once, probably broken</p>
+                </div>
+            </a>
+
+            <a href="https://chitintim.github.io/japan26-ski-w1/" class="project-card" target="_blank">
+                <div class="project-emoji">🗾</div>
+                <div class="project-info">
+                    <h3>Japan Ski Trip</h3>
+                    <p>Powder so good it'll ruin the Alps for you</p>
+                </div>
+            </a>
+
+            <a href="https://chitintim.github.io/dec25-ski/" class="project-card" target="_blank">
+                <div class="project-emoji">🎿</div>
+                <div class="project-info">
+                    <h3>NYE in the Alps</h3>
+                    <p>Another ski trip because I have a problem</p>
+                </div>
+            </a>
+
+            <a href="https://chitintim.github.io/dec25-ski-group2/" class="project-card" target="_blank">
+                <div class="project-emoji">⛷️</div>
+                <div class="project-info">
+                    <h3>Even More Skiing</h3>
+                    <p>Seriously, it's an addiction</p>
+                </div>
+            </a>
+
+            <a href="https://chitintim.github.io/temple/" class="project-card" target="_blank">
+                <div class="project-emoji">🏛️</div>
+                <div class="project-info">
+                    <h3>Temple Website</h3>
+                    <p>The only serious thing here</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="random-section">
+        <h2>Random Facts Nobody Asked For</h2>
+        <div class="fact-grid">
+            <div class="fact-card" data-fact="pilot">
+                <span class="fact-emoji">✈️</span>
+                <p>Has a PPL but scared of heights</p>
+            </div>
+            <div class="fact-card" data-fact="consultant">
+                <span class="fact-emoji">📊</span>
+                <p>Makes slides for a living (kill me)</p>
+            </div>
+            <div class="fact-card" data-fact="3d">
+                <span class="fact-emoji">🖨️</span>
+                <p>3D prints useless stuff at 2am</p>
+            </div>
+            <div class="fact-card" data-fact="golf">
+                <span class="fact-emoji">🏌️</span>
+                <p>18 handicap (on a good day)</p>
+            </div>
+            <div class="fact-card" data-fact="spontaneous">
+                <span class="fact-emoji">🎲</span>
+                <p>Books flights at 2am on impulse</p>
+            </div>
+            <div class="fact-card" data-fact="code">
+                <span class="fact-emoji">💻</span>
+                <p>Copies code from Stack Overflow</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="future-projects">
+        <h2>Things I'm Probably Building Next</h2>
+        <div class="future-list">
+            <div class="future-item">
+                <span class="future-emoji">🚨</span>
+                <div>
+                    <h4>Powder Alarm</h4>
+                    <p>Auto-books Friday 8:05pm flight to Geneva when it dumps</p>
+                </div>
+            </div>
+            <div class="future-item">
+                <span class="future-emoji">✈️</span>
+                <div>
+                    <h4>Flight Deal Finder</h4>
+                    <p>Because I check Google Flights too often</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-section">
+        <p>Find me on <a href="https://github.com/chitintim" target="_blank">GitHub</a> where I commit crimes against code</p>
+        <p class="tiny-text">This page changes based on my mood. Refresh for chaos.</p>
+    </div>
+
+    <div class="floating-widget" id="widget" onclick="makeItRain()">
+        <span id="widget-text">❄️</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
