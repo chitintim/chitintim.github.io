@@ -109,8 +109,7 @@ function calculateSkiDays() {
 
         // Your known ski trips
         const skiTrips = [
-            new Date(2025, 11, 18), // Dec 18, 2025 - La Tania Christmas trip
-            new Date(2025, 11, 28), // Dec 28, 2025 - NYE La Tania
+            new Date(2025, 11, 28), // Dec 28, 2025 - La Tania
             new Date(2026, 2, 21)   // March 21, 2026 - Japan
         ];
 
@@ -239,19 +238,6 @@ function setupInteractions() {
 
 // Random events that happen occasionally
 function startRandomEvents() {
-    // Random obsession updates - more frequent
-    setInterval(() => {
-        const obsessionEl = document.getElementById('obsession');
-        if (obsessionEl) {
-            const newObsession = obsessions[Math.floor(Math.random() * obsessions.length)];
-            obsessionEl.style.opacity = '0';
-            setTimeout(() => {
-                obsessionEl.textContent = newObsession;
-                obsessionEl.style.opacity = '1';
-            }, 300);
-        }
-    }, 5000); // Every 5 seconds
-
     // Random bio updates
     setInterval(() => {
         const bioVariations = [
