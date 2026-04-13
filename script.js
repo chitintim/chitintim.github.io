@@ -534,7 +534,7 @@ function showToast(message, isPowderTime = false) {
     }
 
     document.body.appendChild(toast);
-    const duration = isPowderTime ? 2200 : 2000;
+    const duration = isPowderTime ? 3500 : 2000;
 
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -566,37 +566,37 @@ function makeItRain() {
         vignette.classList.add('active');
     }, 200);
 
-    // Phase 3: Emoji snowflakes on top
+    // Phase 3: Emoji snowflakes — gentle, slower fall
     const snowflakes = ['❄️', '❄️', '❄️', '❅', '❆', '🌨️'];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 50; i++) {
         setTimeout(() => {
             const snow = document.createElement('div');
             snow.className = 'falling-emoji';
             snow.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
             snow.style.left = Math.random() * window.innerWidth + 'px';
             snow.style.top = '-50px';
-            snow.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
-            snow.style.animationDuration = (Math.random() * 2.5 + 1.5) + 's';
+            snow.style.fontSize = (Math.random() * 1.2 + 0.8) + 'rem';
+            snow.style.animationDuration = (Math.random() * 3 + 3) + 's';
             document.body.appendChild(snow);
-            setTimeout(() => snow.remove(), 4500);
-        }, i * 70);
+            setTimeout(() => snow.remove(), 7000);
+        }, i * 120);
     }
 
-    // Phase 4: POWDER TIME popup
+    // Phase 4: POWDER TIME popup — delayed so snow settles first
     setTimeout(() => {
         showToast("❄️ POWDER TIME! ❄️<br>RAIN?! ABSOLUTELY NOT!", true);
-    }, 600);
+    }, 1000);
 
     // Phase 5: Wind down
     setTimeout(() => {
         document.body.classList.remove('blizzard-shake');
-    }, 2000);
+    }, 2500);
 
     setTimeout(() => {
         overlay.classList.remove('active');
         vignette.classList.remove('active');
         blizzardActive = false;
-    }, 5000);
+    }, 7000);
 }
 
 // ─── SKI GAME: Powder Run ───
