@@ -799,23 +799,22 @@ function makeItRain() {
             }
         }
 
-        // Record ski track points (every few frames for performance)
-        if (Math.random() < 0.6) {
-            trackPoints.push({
-                lx: skier.x - 4,
-                ly: skier.y + 12,
-                rx: skier.x + 4,
-                ry: skier.y + 12,
-                age: 0
-            });
-        }
+        // Record ski track points every frame
+        trackPoints.push({
+            lx: skier.x - 4,
+            ly: skier.y + 14,
+            rx: skier.x + 4,
+            ry: skier.y + 14,
+            age: 0
+        });
 
-        // Scroll and age track points
+        // Scroll track points DOWN (behind the skier on slope) and age them
         for (let i = trackPoints.length - 1; i >= 0; i--) {
-            trackPoints[i].ly -= speed;
-            trackPoints[i].ry -= speed;
+            trackPoints[i].ly += speed;
+            trackPoints[i].ry += speed;
             trackPoints[i].age++;
-            if (trackPoints[i].ly < -20 || trackPoints[i].age > 200) {
+            // Remove when off-screen or old
+            if (trackPoints[i].ly > H + 20 || trackPoints[i].age > 300) {
                 trackPoints.splice(i, 1);
             }
         }
@@ -867,46 +866,40 @@ function makeItRain() {
             ctx.stroke();
         }
 
-        // Ski tracks — parallel lines trailing behind skier
-        if (trackPoints.length > 1) {
-            // Left track
-            ctx.strokeStyle = 'rgba(140, 155, 170, 0.5)';
+        // Ski tracks — parallel lines trailing behind (below) the skier
+        // Draw segments that fade with age
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        for (let i = 1; i < trackPoints.length; i++) {
+            const p = trackPoints[i];
+            const prev = trackPoints[i - 1];
+            const fade = Math.max(0, 1 - p.age / 300);
+            if (fade <= 0) continue;
+
+            // Left track line
+            ctx.strokeStyle = `rgba(140, 155, 170, ${fade * 0.55})`;
             ctx.lineWidth = 1.5;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
             ctx.beginPath();
-            ctx.moveTo(trackPoints[0].lx, trackPoints[0].ly);
-            for (let i = 1; i < trackPoints.length; i++) {
-                const fade = 1 - trackPoints[i].age / 200;
-                if (fade <= 0) continue;
-                ctx.lineTo(trackPoints[i].lx, trackPoints[i].ly);
-            }
+            ctx.moveTo(prev.lx, prev.ly);
+            ctx.lineTo(p.lx, p.ly);
             ctx.stroke();
 
-            // Right track
+            // Right track line
             ctx.beginPath();
-            ctx.moveTo(trackPoints[0].rx, trackPoints[0].ry);
-            for (let i = 1; i < trackPoints.length; i++) {
-                const fade = 1 - trackPoints[i].age / 200;
-                if (fade <= 0) continue;
-                ctx.lineTo(trackPoints[i].rx, trackPoints[i].ry);
-            }
+            ctx.moveTo(prev.rx, prev.ry);
+            ctx.lineTo(p.rx, p.ry);
             ctx.stroke();
 
-            // Track shadow/depth — slightly offset darker line
-            ctx.strokeStyle = 'rgba(120, 135, 150, 0.2)';
-            ctx.lineWidth = 2.5;
+            // Shadow underneath for depth
+            ctx.strokeStyle = `rgba(120, 135, 150, ${fade * 0.15})`;
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.moveTo(trackPoints[0].lx + 1, trackPoints[0].ly + 1);
-            for (let i = 1; i < trackPoints.length; i++) {
-                ctx.lineTo(trackPoints[i].lx + 1, trackPoints[i].ly + 1);
-            }
+            ctx.moveTo(prev.lx + 1, prev.ly + 1);
+            ctx.lineTo(p.lx + 1, p.ly + 1);
             ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(trackPoints[0].rx + 1, trackPoints[0].ry + 1);
-            for (let i = 1; i < trackPoints.length; i++) {
-                ctx.lineTo(trackPoints[i].rx + 1, trackPoints[i].ry + 1);
-            }
+            ctx.moveTo(prev.rx + 1, prev.ry + 1);
+            ctx.lineTo(p.rx + 1, p.ry + 1);
             ctx.stroke();
         }
 
