@@ -799,22 +799,21 @@ function makeItRain() {
             }
         }
 
-        // Record ski track points every frame
+        // Record ski track points every frame (behind = above the skier)
         trackPoints.push({
             lx: skier.x - 4,
-            ly: skier.y + 14,
+            ly: skier.y - 14,
             rx: skier.x + 4,
-            ry: skier.y + 14,
+            ry: skier.y - 14,
             age: 0
         });
 
-        // Scroll track points DOWN (behind the skier on slope) and age them
+        // Scroll track points UP (behind the skier, toward top of screen)
         for (let i = trackPoints.length - 1; i >= 0; i--) {
-            trackPoints[i].ly += speed;
-            trackPoints[i].ry += speed;
+            trackPoints[i].ly -= speed;
+            trackPoints[i].ry -= speed;
             trackPoints[i].age++;
-            // Remove when off-screen or old
-            if (trackPoints[i].ly > H + 20 || trackPoints[i].age > 300) {
+            if (trackPoints[i].ly < -20 || trackPoints[i].age > 300) {
                 trackPoints.splice(i, 1);
             }
         }
