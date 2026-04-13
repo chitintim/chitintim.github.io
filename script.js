@@ -799,9 +799,8 @@ function makeItRain() {
             }
         }
 
-        // Record ski track points at boot/ski junction (bottom of legs)
-        // bootWorldY is set by drawSkier — use foot position + body angle offset
-        const footY = skier.y + 3; // boot bottom in world coords
+        // Record ski track points at boot/ski junction (bottom of boots = y+9 in skier local)
+        const footY = skier.y + 9;
         trackPoints.push({
             lx: skier.x - 4,
             ly: footY,
@@ -979,52 +978,44 @@ function makeItRain() {
         ctx.fillRect(x - 2, y + size * 0.3, 4, size * 0.25);
     }
 
-    // Returns the boot Y position in world coords for track recording
-    let bootWorldY = 0;
-
     function drawSkier(x, y, angle) {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(angle * Math.PI / 180);
 
-        // ─── Head ─── (draw first so body overlaps neck area)
-        ctx.shadowColor = 'rgba(78, 205, 196, 0.4)';
-        ctx.shadowBlur = 8;
-        // (head drawn later after body for layering — declared here for flow)
-        ctx.shadowBlur = 0;
+        // Layout (top to bottom):
+        //   Head:    -20 to -15
+        //   Body:    -15 to -4
+        //   Legs:    -4 to 6   (visible! dark trousers)
+        //   Boots:   6 to 9
+        //   Skis:    9 downward (short when straight, longer when turning)
 
-        // Body positions (top-down: head at top, feet at bottom)
-        const bodyTop = -14;
-        const bodyBottom = -2;
-        const bootY = 0;       // where boots sit
-        const bootBottom = 3;  // bottom of boots — skis attach here
-
-        // ─── Legs (fixed, short) ───
+        // ─── Legs (visible, dark trousers) ───
         ctx.strokeStyle = '#2a2a3e';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 3.5;
         ctx.lineCap = 'round';
+        // Left leg — slight bend
         ctx.beginPath();
-        ctx.moveTo(-3, bodyBottom);
-        ctx.lineTo(-4, bootY);
+        ctx.moveTo(-3, -4);
+        ctx.lineTo(-4, 6);
         ctx.stroke();
+        // Right leg
         ctx.beginPath();
-        ctx.moveTo(3, bodyBottom);
-        ctx.lineTo(4, bootY);
+        ctx.moveTo(3, -4);
+        ctx.lineTo(4, 6);
         ctx.stroke();
 
-        // ─── Boots ───
+        // ─── Boots (visible, chunky) ───
         ctx.fillStyle = '#1a1a2e';
-        ctx.fillRect(-6, bootY - 1, 4, 4);
-        ctx.fillRect(2, bootY - 1, 4, 4);
+        ctx.fillRect(-6, 5, 5, 4);
+        ctx.fillRect(1, 5, 5, 4);
 
-        // ─── Skis (attached at boots, angle into turn direction) ───
-        // Skis point toward bottom-left when turning left, bottom-right when turning right
-        const skiAngle = skier.vx * 6; // degrees — aggressive angle into turn
+        // ─── Skis (from boot bottom, angle into turn) ───
+        const skiAngle = skier.vx * 8;
         const turnRate = Math.abs(skier.vx);
-        const skiLength = 22 + turnRate * 6; // longer when carving hard
+        const skiLength = 10 + turnRate * 5;
         const skiRad = skiAngle * Math.PI / 180;
 
-        // Calculate ski end points from boot position
         const skiEndX = Math.sin(skiRad) * skiLength;
         const skiEndY = Math.cos(skiRad) * skiLength;
 
@@ -1032,40 +1023,37 @@ function makeItRain() {
         ctx.lineWidth = 2.5;
         ctx.lineCap = 'round';
 
-        // Left ski: from left boot downward at angle
+        // Left ski
         ctx.beginPath();
-        ctx.moveTo(-4, bootBottom);
-        ctx.lineTo(-4 + skiEndX, bootBottom + skiEndY);
+        ctx.moveTo(-4, 9);
+        ctx.lineTo(-4 + skiEndX, 9 + skiEndY);
         ctx.stroke();
-        // Right ski: from right boot downward at angle
+        // Right ski
         ctx.beginPath();
-        ctx.moveTo(4, bootBottom);
-        ctx.lineTo(4 + skiEndX, bootBottom + skiEndY);
-        ctx.stroke();
-
-        // Ski tips (curved ends)
-        ctx.lineWidth = 2;
-        const tipX = skiEndX * 1.05;
-        const tipY = skiEndY * 1.05;
-        ctx.beginPath();
-        ctx.moveTo(-4 + skiEndX, bootBottom + skiEndY);
-        ctx.quadraticCurveTo(-4 + tipX + 2, bootBottom + tipY + 1, -4 + tipX + 1, bootBottom + tipY - 2);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(4 + skiEndX, bootBottom + skiEndY);
-        ctx.quadraticCurveTo(4 + tipX + 2, bootBottom + tipY + 1, 4 + tipX + 1, bootBottom + tipY - 2);
+        ctx.moveTo(4, 9);
+        ctx.lineTo(4 + skiEndX, 9 + skiEndY);
         ctx.stroke();
 
-        // Record boot world position for tracks
-        bootWorldY = bootBottom;
+        // Ski tips
+        if (skiLength > 6) {
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-4 + skiEndX, 9 + skiEndY);
+            ctx.lineTo(-4 + skiEndX + Math.sign(skiEndX || 0.1) * 2, 9 + skiEndY + 1);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(4 + skiEndX, 9 + skiEndY);
+            ctx.lineTo(4 + skiEndX + Math.sign(skiEndX || 0.1) * 2, 9 + skiEndY + 1);
+            ctx.stroke();
+        }
 
         // Body / jacket
         ctx.fillStyle = '#4ecdc4';
         ctx.beginPath();
-        ctx.moveTo(-6, -2);
-        ctx.lineTo(6, -2);
-        ctx.lineTo(5, -14);
-        ctx.lineTo(-5, -14);
+        ctx.moveTo(-6, -4);
+        ctx.lineTo(6, -4);
+        ctx.lineTo(5, -15);
+        ctx.lineTo(-5, -15);
         ctx.closePath();
         ctx.fill();
 
@@ -1073,8 +1061,8 @@ function makeItRain() {
         ctx.strokeStyle = '#3dbdb5';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(-5, -8);
-        ctx.lineTo(5, -8);
+        ctx.moveTo(-5, -9);
+        ctx.lineTo(5, -9);
         ctx.stroke();
 
         // Arms — tucked with poles
@@ -1082,38 +1070,34 @@ function makeItRain() {
         ctx.strokeStyle = '#4ecdc4';
         ctx.lineWidth = 2.5;
         ctx.lineCap = 'round';
-        // Left arm
         ctx.beginPath();
-        ctx.moveTo(-5, -10);
-        ctx.lineTo(-10, -5 + armAngle);
+        ctx.moveTo(-5, -11);
+        ctx.lineTo(-10, -6 + armAngle);
         ctx.stroke();
-        // Right arm
         ctx.beginPath();
-        ctx.moveTo(5, -10);
-        ctx.lineTo(10, -5 - armAngle);
+        ctx.moveTo(5, -11);
+        ctx.lineTo(10, -6 - armAngle);
         ctx.stroke();
 
         // Ski poles
         ctx.strokeStyle = '#888';
         ctx.lineWidth = 1.5;
-        // Left pole
         ctx.beginPath();
-        ctx.moveTo(-10, -5 + armAngle);
-        ctx.lineTo(-12, 8);
+        ctx.moveTo(-10, -6 + armAngle);
+        ctx.lineTo(-11, 4);
         ctx.stroke();
-        // Right pole
         ctx.beginPath();
-        ctx.moveTo(10, -5 - armAngle);
-        ctx.lineTo(12, 8);
+        ctx.moveTo(10, -6 - armAngle);
+        ctx.lineTo(11, 4);
         ctx.stroke();
-        // Pole baskets (circles at bottom)
+        // Pole baskets
         ctx.strokeStyle = '#666';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(-12, 9, 2, 0, Math.PI * 2);
+        ctx.arc(-11, 5, 2, 0, Math.PI * 2);
         ctx.stroke();
         ctx.beginPath();
-        ctx.arc(12, 9, 2, 0, Math.PI * 2);
+        ctx.arc(11, 5, 2, 0, Math.PI * 2);
         ctx.stroke();
 
         // Head
@@ -1121,22 +1105,22 @@ function makeItRain() {
         ctx.shadowBlur = 8;
         ctx.fillStyle = '#f0d0b0';
         ctx.beginPath();
-        ctx.arc(0, -18, 5, 0, Math.PI * 2);
+        ctx.arc(0, -19, 5, 0, Math.PI * 2);
         ctx.fill();
 
         // Helmet
         ctx.shadowBlur = 0;
         ctx.fillStyle = '#ff6b6b';
         ctx.beginPath();
-        ctx.arc(0, -19, 5.5, Math.PI, 0);
+        ctx.arc(0, -20, 5.5, Math.PI, 0);
         ctx.fill();
 
         // Goggles
         ctx.fillStyle = '#222';
-        ctx.fillRect(-4, -19, 8, 3);
+        ctx.fillRect(-4, -20, 8, 3);
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
         ctx.lineWidth = 0.5;
-        ctx.strokeRect(-4, -19, 8, 3);
+        ctx.strokeRect(-4, -20, 8, 3);
 
         ctx.restore();
     }
