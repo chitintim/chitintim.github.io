@@ -633,7 +633,7 @@ function makeItRain() {
     let raf = null;
 
     // Game state
-    let skier, trees, snowParticles, trails, score, speed, steerInput;
+    let skier, trees, snowParticles, trails, trackPoints, score, speed, steerInput;
 
     const gameComments = [
         { score: 0,   text: "Too much après, not enough skiing" },
@@ -666,6 +666,7 @@ function makeItRain() {
         trees = [];
         snowParticles = [];
         trails = [];
+        trackPoints = []; // Stores {lx, ly, rx, ry} for parallel ski tracks
         score = 0;
         speed = 2;
         steerInput = 0;
@@ -798,6 +799,27 @@ function makeItRain() {
             }
         }
 
+        // Record ski track points (every few frames for performance)
+        if (Math.random() < 0.6) {
+            trackPoints.push({
+                lx: skier.x - 4,
+                ly: skier.y + 12,
+                rx: skier.x + 4,
+                ry: skier.y + 12,
+                age: 0
+            });
+        }
+
+        // Scroll and age track points
+        for (let i = trackPoints.length - 1; i >= 0; i--) {
+            trackPoints[i].ly -= speed;
+            trackPoints[i].ry -= speed;
+            trackPoints[i].age++;
+            if (trackPoints[i].ly < -20 || trackPoints[i].age > 200) {
+                trackPoints.splice(i, 1);
+            }
+        }
+
         // Snow particles drift
         for (const p of snowParticles) {
             p.y -= speed * p.speed;
@@ -814,32 +836,90 @@ function makeItRain() {
     }
 
     function draw() {
-        // Background gradient
+        // Snowy slope background
         const grad = ctx.createLinearGradient(0, 0, 0, H);
-        grad.addColorStop(0, '#0a1628');
-        grad.addColorStop(1, '#0f2847');
+        grad.addColorStop(0, '#e8ecf0');
+        grad.addColorStop(0.5, '#dde3e9');
+        grad.addColorStop(1, '#d0d8e0');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, W, H);
 
-        // Ski tracks (subtle)
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-        ctx.lineWidth = 2;
-        // Left track
-        ctx.beginPath();
-        ctx.moveTo(skier.x - 4, skier.y + 8);
-        ctx.lineTo(skier.x - 4 - skier.vx * 2, H);
-        ctx.stroke();
-        // Right track
-        ctx.beginPath();
-        ctx.moveTo(skier.x + 4, skier.y + 8);
-        ctx.lineTo(skier.x + 4 - skier.vx * 2, H);
-        ctx.stroke();
+        // Snow texture — subtle random dots
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        for (let i = 0; i < 60; i++) {
+            // Use deterministic-ish positions based on score for scrolling feel
+            const seed = (i * 7919 + Math.floor(score * 0.5)) % 10000;
+            const tx = (seed * 3.7) % W;
+            const ty = ((seed * 2.3 + score * speed * 0.3) % (H + 40)) - 20;
+            ctx.beginPath();
+            ctx.arc(tx, ty, Math.random() * 1.5 + 0.3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Slope grooming lines (subtle parallel lines scrolling down)
+        ctx.strokeStyle = 'rgba(180, 195, 210, 0.25)';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < 12; i++) {
+            const lineY = ((i * 50 + score * speed * 0.4) % (H + 60)) - 30;
+            ctx.beginPath();
+            ctx.moveTo(0, lineY);
+            ctx.lineTo(W, lineY + 8);
+            ctx.stroke();
+        }
+
+        // Ski tracks — parallel lines trailing behind skier
+        if (trackPoints.length > 1) {
+            // Left track
+            ctx.strokeStyle = 'rgba(140, 155, 170, 0.5)';
+            ctx.lineWidth = 1.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(trackPoints[0].lx, trackPoints[0].ly);
+            for (let i = 1; i < trackPoints.length; i++) {
+                const fade = 1 - trackPoints[i].age / 200;
+                if (fade <= 0) continue;
+                ctx.lineTo(trackPoints[i].lx, trackPoints[i].ly);
+            }
+            ctx.stroke();
+
+            // Right track
+            ctx.beginPath();
+            ctx.moveTo(trackPoints[0].rx, trackPoints[0].ry);
+            for (let i = 1; i < trackPoints.length; i++) {
+                const fade = 1 - trackPoints[i].age / 200;
+                if (fade <= 0) continue;
+                ctx.lineTo(trackPoints[i].rx, trackPoints[i].ry);
+            }
+            ctx.stroke();
+
+            // Track shadow/depth — slightly offset darker line
+            ctx.strokeStyle = 'rgba(120, 135, 150, 0.2)';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(trackPoints[0].lx + 1, trackPoints[0].ly + 1);
+            for (let i = 1; i < trackPoints.length; i++) {
+                ctx.lineTo(trackPoints[i].lx + 1, trackPoints[i].ly + 1);
+            }
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(trackPoints[0].rx + 1, trackPoints[0].ry + 1);
+            for (let i = 1; i < trackPoints.length; i++) {
+                ctx.lineTo(trackPoints[i].rx + 1, trackPoints[i].ry + 1);
+            }
+            ctx.stroke();
+        }
 
         // Snow spray trails
         for (const t of trails) {
-            ctx.fillStyle = `rgba(200, 230, 255, ${t.life * 0.5})`;
+            ctx.fillStyle = `rgba(255, 255, 255, ${t.life * 0.8})`;
             ctx.beginPath();
             ctx.arc(t.x, t.y, t.size, 0, Math.PI * 2);
+            ctx.fill();
+            // Spray shadow
+            ctx.fillStyle = `rgba(160, 175, 190, ${t.life * 0.3})`;
+            ctx.beginPath();
+            ctx.arc(t.x + 1, t.y + 1, t.size * 0.8, 0, Math.PI * 2);
             ctx.fill();
         }
 
@@ -851,22 +931,27 @@ function makeItRain() {
         // Skier
         drawSkier(skier.x, skier.y, skier.angle);
 
-        // Snow particles
+        // Falling snow particles (light, drifting)
         for (const p of snowParticles) {
-            ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+            ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity * 0.8})`;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            // Tiny shadow
+            ctx.fillStyle = `rgba(180, 190, 200, ${p.opacity * 0.3})`;
+            ctx.beginPath();
+            ctx.arc(p.x + 0.5, p.y + 0.5, p.size * 0.7, 0, Math.PI * 2);
             ctx.fill();
         }
     }
 
     function drawTree(x, y, size, hit) {
-        const colour = hit ? 'rgba(255, 107, 107, 0.8)' : 'rgba(40, 120, 80, 0.9)';
+        const colour = hit ? 'rgba(255, 80, 80, 0.9)' : 'rgba(30, 100, 60, 0.95)';
 
-        // Shadow
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        // Shadow on snow
+        ctx.fillStyle = 'rgba(150, 165, 180, 0.3)';
         ctx.beginPath();
-        ctx.ellipse(x + 3, y + size * 0.6, size * 0.4, size * 0.15, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + 4, y + size * 0.6, size * 0.5, size * 0.15, 0, 0, Math.PI * 2);
         ctx.fill();
 
         // Tree body (3 triangles stacked)
@@ -886,7 +971,7 @@ function makeItRain() {
         }
 
         // Snow cap
-        ctx.fillStyle = 'rgba(220, 240, 255, 0.6)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
         const topY = y - size * 0.75;
         ctx.beginPath();
         ctx.moveTo(x, topY);
