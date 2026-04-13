@@ -799,12 +799,14 @@ function makeItRain() {
             }
         }
 
-        // Record ski track points every frame (behind = above the skier)
+        // Record ski track points at boot position (where skis meet legs)
+        // Offset slightly by turn angle for realism
+        const skiOffset = skier.vx * 0.3;
         trackPoints.push({
-            lx: skier.x - 4,
-            ly: skier.y - 14,
-            rx: skier.x + 4,
-            ry: skier.y - 14,
+            lx: skier.x - 4 + skiOffset,
+            ly: skier.y - 7,
+            rx: skier.x + 4 + skiOffset,
+            ry: skier.y - 7,
             age: 0
         });
 
@@ -980,57 +982,82 @@ function makeItRain() {
     function drawSkier(x, y, angle) {
         ctx.save();
         ctx.translate(x, y);
-        ctx.rotate(angle * Math.PI / 180);
 
-        // Subtle glow under skier
-        ctx.shadowColor = 'rgba(78, 205, 196, 0.3)';
-        ctx.shadowBlur = 10;
+        // ─── Skis (drawn with their own rotation into the turn) ───
+        const turnRate = Math.abs(skier.vx);
+        // Skis angle into the direction of travel
+        const skiAngle = skier.vx * 4; // degrees, more than body lean
+        // Skis appear longer when edging (perspective effect)
+        const skiLength = 28 + turnRate * 4;
+        const skiRad = skiAngle * Math.PI / 180;
 
-        // Skis — bright, long
-        ctx.shadowBlur = 0;
+        ctx.save();
+        ctx.rotate(skiRad);
         ctx.strokeStyle = '#ff6b6b';
         ctx.lineWidth = 2.5;
         ctx.lineCap = 'round';
+
+        const skiTop = -skiLength * 0.35;
+        const skiBottom = skiLength * 0.65;
+
         // Left ski
         ctx.beginPath();
-        ctx.moveTo(-5, -12);
-        ctx.lineTo(-6, 20);
+        ctx.moveTo(-4, skiTop);
+        ctx.lineTo(-5, skiBottom);
         ctx.stroke();
         // Right ski
         ctx.beginPath();
-        ctx.moveTo(5, -12);
-        ctx.lineTo(4, 20);
+        ctx.moveTo(4, skiTop);
+        ctx.lineTo(3, skiBottom);
         ctx.stroke();
-        // Ski tips (curved front)
+        // Ski tips (curved front ends)
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(-6, 20);
-        ctx.quadraticCurveTo(-7, 24, -5, 25);
+        ctx.moveTo(-5, skiBottom);
+        ctx.quadraticCurveTo(-6, skiBottom + 4, -4, skiBottom + 5);
         ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(4, 20);
-        ctx.quadraticCurveTo(3, 24, 5, 25);
+        ctx.moveTo(3, skiBottom);
+        ctx.quadraticCurveTo(2, skiBottom + 4, 4, skiBottom + 5);
+        ctx.stroke();
+        // Ski tails
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(-4, skiTop);
+        ctx.quadraticCurveTo(-5, skiTop - 2, -3, skiTop - 3);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(4, skiTop);
+        ctx.quadraticCurveTo(5, skiTop - 2, 3, skiTop - 3);
         ctx.stroke();
 
-        // Legs — slightly bent (ski stance)
+        ctx.restore(); // End ski rotation
+
+        // ─── Body (rotates with lean) ───
+        ctx.rotate(angle * Math.PI / 180);
+
+        // Subtle glow
+        ctx.shadowColor = 'rgba(78, 205, 196, 0.3)';
+        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 0;
+
+        // Legs — short, bent ski stance
         ctx.strokeStyle = '#2a2a3e';
         ctx.lineWidth = 3;
         ctx.lineCap = 'round';
-        // Left leg
         ctx.beginPath();
         ctx.moveTo(-3, -2);
-        ctx.lineTo(-4, -8);
+        ctx.lineTo(-4, -7);
         ctx.stroke();
-        // Right leg
         ctx.beginPath();
         ctx.moveTo(3, -2);
-        ctx.lineTo(4, -8);
+        ctx.lineTo(4, -7);
         ctx.stroke();
 
         // Boots
         ctx.fillStyle = '#1a1a2e';
-        ctx.fillRect(-6, -10, 4, 3);
-        ctx.fillRect(2, -10, 4, 3);
+        ctx.fillRect(-6, -9, 4, 3);
+        ctx.fillRect(2, -9, 4, 3);
 
         // Body / jacket
         ctx.fillStyle = '#4ecdc4';
