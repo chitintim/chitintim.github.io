@@ -1011,9 +1011,9 @@ function makeItRain() {
         ctx.fillRect(1, 5, 5, 4);
 
         // ─── Skis (from boot bottom, angle into turn) ───
-        const skiAngle = skier.vx * 8;
+        const skiAngle = skier.vx * 15;
         const turnRate = Math.abs(skier.vx);
-        const skiLength = 10 + turnRate * 5;
+        const skiLength = 8 + turnRate * 3;
         const skiRad = skiAngle * Math.PI / 180;
 
         const skiEndX = Math.sin(skiRad) * skiLength;
