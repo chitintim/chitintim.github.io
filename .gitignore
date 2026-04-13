@@ -3,8 +3,9 @@
 .vscode/
 .idea/
 
-# Instructions and documentation
+# Claude Code
 CLAUDE.md
+.claude/
 
 # Test files
 *-test.html
