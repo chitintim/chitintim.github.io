@@ -12,304 +12,648 @@
         }
 
         :root {
-            --bg: #0a0a0a;
-            --card: #1a1a1a;
-            --text: #e0e0e0;
-            --text-dim: #888;
+            --bg: #05050a;
+            --bg-lighter: #0a0a14;
+            --card: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text: #e8e8ef;
+            --text-dim: #6b6b80;
             --accent: #ff6b6b;
             --accent2: #4ecdc4;
+            --accent3: #ffe66d;
+            --accent4: #a855f7;
+            --glow-purple: rgba(168, 85, 247, 0.15);
+            --glow-teal: rgba(78, 205, 196, 0.12);
+            --glow-red: rgba(255, 107, 107, 0.12);
+            --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
+            overflow-x: hidden;
             line-height: 1.6;
         }
 
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 20px;
+        /* ─── Animated Gradient Orbs ─── */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
         }
 
-        .header {
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--glow-purple), transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: orbFloat1 25s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--glow-teal), transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            animation: orbFloat2 30s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--glow-red), transparent 70%);
+            top: 50%;
+            left: 50%;
+            animation: orbFloat3 20s ease-in-out infinite;
+        }
+
+        @keyframes orbFloat1 {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(-100px, 80px); }
+            66% { transform: translate(50px, -60px); }
+        }
+
+        @keyframes orbFloat2 {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(80px, -60px); }
+            66% { transform: translate(-50px, 40px); }
+        }
+
+        @keyframes orbFloat3 {
+            0%, 100% { transform: translate(-50%, -50%); }
+            33% { transform: translate(-30%, -60%); }
+            66% { transform: translate(-70%, -40%); }
+        }
+
+        /* ─── Particle Canvas ─── */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ─── Section Base ─── */
+        section {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+        }
+
+        .section-inner {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* ─── HERO SECTION ─── */
+        .hero {
+            min-height: 100vh;
+            min-height: 100svh;
+            flex-direction: column;
             text-align: center;
-            margin-bottom: 30px;
-            padding-top: 20px;
+            gap: 0;
+            padding-top: 0;
+            padding-bottom: 0;
         }
 
-        .avatar {
-            font-size: 60px;
-            margin-bottom: 10px;
+        .hero-avatar {
+            font-size: 80px;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.3s var(--spring);
             display: inline-block;
+            margin-bottom: 24px;
         }
 
-        .avatar:hover {
+        .hero-avatar:hover {
             transform: rotate(20deg) scale(1.2);
         }
 
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 5px;
+        .hero-avatar.spinning {
+            animation: spin 0.5s linear infinite;
         }
 
-        .tagline {
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: linear-gradient(
+                135deg,
+                var(--accent) 0%,
+                var(--accent3) 30%,
+                var(--accent2) 60%,
+                var(--accent4) 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+
+        .hero-title .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 0.8em;
+            background: var(--accent);
+            margin-left: 4px;
+            vertical-align: text-bottom;
+            animation: cursorBlink 0.75s step-end infinite;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .hero-tagline {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
             color: var(--text-dim);
-            font-size: 0.95rem;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 1.5s forwards;
         }
 
-        .bio-card {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 3px solid var(--accent);
+        .hero-bio {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            color: var(--text-dim);
+            max-width: 560px;
+            margin: 0 auto 0;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 1.8s forwards;
         }
 
-        .status-bar {
+        #obsession {
+            color: var(--accent2);
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .hero-scroll-hint {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .status-item {
-            display: flex;
             align-items: center;
             gap: 8px;
-            background: var(--card);
-            padding: 12px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        .status-item span:not(.status-emoji) {
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-            white-space: nowrap;
-        }
-
-        .status-emoji {
-            font-size: 1.1rem;
-        }
-
-        #skiDays, #coffeeCount {
-            font-weight: 600;
-            color: var(--accent2);
-        }
-
-        .projects {
-            margin-bottom: 40px;
-        }
-
-        .projects h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .subtitle {
-            font-size: 0.8rem;
             color: var(--text-dim);
-            font-weight: 400;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 2.5s forwards;
         }
 
-        .project-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+        .scroll-arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid var(--text-dim);
+            border-bottom: 2px solid var(--text-dim);
+            transform: rotate(45deg);
+            animation: bounceDown 2s ease-in-out infinite;
         }
 
-        @media (max-width: 640px) {
-            .project-list {
-                grid-template-columns: 1fr;
-            }
+        @keyframes bounceDown {
+            0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.5; }
+            50% { transform: rotate(45deg) translate(4px, 4px); opacity: 1; }
         }
 
-        .project-item {
+        /* ─── STATS RIBBON ─── */
+        .stats-section {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .stats-marquee {
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            background: var(--card);
-            padding: 15px;
-            border-radius: 12px;
-            text-decoration: none;
-            color: var(--text);
-            transition: all 0.2s;
-            border: 1px solid transparent;
-            min-height: 100px;
+            width: max-content;
+            animation: marqueeScroll 25s linear infinite;
+            padding: 20px 0;
         }
 
-        .project-item:hover {
-            transform: translateX(5px);
-            border-color: var(--accent);
+        .stats-marquee:hover {
+            animation-play-state: paused;
         }
 
-        .project-emoji {
-            font-size: 1.8rem;
-            min-width: 40px;
-            text-align: center;
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 32px;
+            white-space: nowrap;
             flex-shrink: 0;
         }
 
-        .project-info {
-            flex: 1;
+        .stat-emoji {
+            font-size: 1.4rem;
         }
 
-        .project-info h3 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            line-height: 1.2;
+        .stat-content {
+            display: flex;
+            flex-direction: column;
         }
 
-        .project-info p {
+        .stat-value {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .stat-divider {
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 1.5rem;
+            padding: 0 16px;
+            flex-shrink: 0;
+        }
+
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ─── SKI COUNTDOWN SECTION ─── */
+        .ski-section {
+            text-align: center;
+            padding: 32px 24px;
+        }
+
+        .ski-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+        }
+
+        .ski-number {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: 900;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .ski-unit {
             font-size: 0.8rem;
             color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .ski-mood {
+            font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+            font-style: italic;
             line-height: 1.4;
+            transition: color 0.3s ease;
         }
 
-        .random-section {
-            margin-bottom: 40px;
+        /* Mood colours */
+        [data-mood="despair"] .ski-number { color: #444; }
+        [data-mood="despair"] .ski-mood { color: var(--text-dim); }
+
+        [data-mood="suffering"] .ski-number { color: var(--accent3); }
+        [data-mood="suffering"] .ski-mood { color: var(--accent3); }
+
+        [data-mood="excited"] .ski-number { color: var(--accent2); }
+        [data-mood="excited"] .ski-mood { color: var(--accent2); }
+
+        [data-mood="manic"] .ski-number {
+            color: var(--accent);
+            animation: maniacPulse 0.5s ease infinite;
+        }
+        [data-mood="manic"] .ski-mood { color: var(--accent); }
+
+        [data-mood="ecstatic"] .ski-number {
+            color: var(--accent2);
+            animation: maniacPulse 0.3s ease infinite;
+            text-shadow: 0 0 40px var(--glow-teal);
         }
 
-        .random-section h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+        @keyframes maniacPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* ─── PROJECTS SECTION ─── */
+        .projects-section {
+            flex-direction: column;
+            gap: 0;
+            padding: 40px 24px;
+        }
+
+        .projects-header {
             text-align: center;
+            margin-bottom: 32px;
         }
 
-        .fact-grid {
+        .projects-header h2 {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .projects-header .subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .project-card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 22px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.4s var(--spring);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 107, 107, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px var(--glow-red);
+        }
+
+        .project-emoji {
+            font-size: 2.4rem;
+            transition: transform 0.5s var(--spring);
+        }
+
+        .project-card:hover .project-emoji {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .project-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .project-card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* ─── FACTS SECTION ─── */
+        .facts-section {
+            flex-direction: column;
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .facts-header {
+            margin-bottom: 32px;
+        }
+
+        .facts-header h2 {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            max-width: 900px;
+            width: 100%;
         }
 
         .fact-card {
             background: var(--card);
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 22px 18px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.4s var(--spring);
             position: relative;
             overflow: hidden;
         }
 
-        .fact-card::before {
+        .fact-card::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, var(--accent), var(--accent2), #ffe66d);
+            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
             transform: scaleX(0);
-            transition: transform 0.3s;
+            transition: transform 0.4s ease;
         }
 
-        .fact-card:hover::before {
+        .fact-card:hover::after {
             transform: scaleX(1);
         }
 
         .fact-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-6px);
+            border-color: rgba(78, 205, 196, 0.3);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2), 0 0 30px var(--glow-teal);
         }
 
         .fact-emoji {
-            font-size: 1.5rem;
+            font-size: 2rem;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            transition: transform 0.4s var(--spring);
+        }
+
+        .fact-card:hover .fact-emoji {
+            transform: scale(1.3) rotate(-5deg);
         }
 
         .fact-card p {
             font-size: 0.85rem;
             color: var(--text-dim);
+            line-height: 1.4;
         }
 
-        .future-projects {
-            margin-bottom: 40px;
-        }
-
-        .future-projects h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .future-list {
-            display: flex;
+        /* ─── FUTURE SECTION ─── */
+        .future-section {
             flex-direction: column;
-            gap: 15px;
+            text-align: center;
+            padding: 40px 24px;
         }
 
-        .future-item {
+        .future-header {
+            margin-bottom: 32px;
+        }
+
+        .future-header h2 {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .future-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .future-card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px dashed rgba(255, 230, 109, 0.2);
+            border-radius: 16px;
+            padding: 22px;
+            text-align: left;
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: var(--card);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px dashed #444;
+            gap: 16px;
+            transition: all 0.4s var(--spring);
+        }
+
+        .future-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 230, 109, 0.4);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2), 0 0 30px rgba(255, 230, 109, 0.08);
         }
 
         .future-emoji {
-            font-size: 2rem;
-            min-width: 50px;
-            text-align: center;
+            font-size: 2.2rem;
+            flex-shrink: 0;
         }
 
-        .future-item h4 {
+        .future-card h4 {
             font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 2px;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
 
-        .future-item p {
+        .future-card p {
             font-size: 0.85rem;
             color: var(--text-dim);
         }
 
-        .bottom-section {
+        /* ─── FOOTER SECTION ─── */
+        .footer-section {
+            padding: 40px 24px 80px;
             text-align: center;
-            padding: 30px 0;
-            border-top: 1px solid #333;
-            margin-top: 40px;
         }
 
-        .bottom-section a {
+        .footer-section a {
             color: var(--accent2);
             text-decoration: none;
+            transition: color 0.2s;
         }
 
-        .bottom-section a:hover {
-            text-decoration: underline;
+        .footer-section a:hover {
+            color: var(--accent);
         }
 
-        .tiny-text {
+        .footer-tiny {
             font-size: 0.75rem;
             color: var(--text-dim);
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
+        /* ─── Scroll Reveal ─── */
+        [data-reveal] {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        [data-reveal].revealed {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        [data-reveal].revealed[data-delay="1"] { transition-delay: 0.1s; }
+        [data-reveal].revealed[data-delay="2"] { transition-delay: 0.2s; }
+        [data-reveal].revealed[data-delay="3"] { transition-delay: 0.3s; }
+        [data-reveal].revealed[data-delay="4"] { transition-delay: 0.4s; }
+        [data-reveal].revealed[data-delay="5"] { transition-delay: 0.5s; }
+        [data-reveal].revealed[data-delay="6"] { transition-delay: 0.6s; }
+
+        /* ─── Floating Widget ─── */
         .floating-widget {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent);
-            border-radius: 25px;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, var(--accent), var(--accent4));
+            border-radius: 50px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 10px 14px;
+            gap: 8px;
+            padding: 12px 20px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s var(--spring);
             z-index: 100;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 24px rgba(168, 85, 247, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         #widget-text {
@@ -325,11 +669,11 @@
         }
 
         .floating-widget:hover {
-            transform: scale(1.05) translateY(-2px);
-            background: var(--accent2);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 8px 36px rgba(168, 85, 247, 0.45);
         }
 
+        /* ─── Falling Snow ─── */
         .falling-emoji {
             position: fixed;
             font-size: 2rem;
@@ -339,28 +683,26 @@
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(calc(100vh + 100px)) rotate(360deg);
-            }
+            to { transform: translateY(calc(100vh + 100px)) rotate(360deg); }
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes powderPop {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes powderPopOut {
+            to { transform: translate(-50%, -50%) scale(0) rotate(180deg); opacity: 0; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        .avatar.spinning {
-            animation: spin 0.5s linear infinite;
         }
 
         @keyframes shake {
@@ -369,108 +711,380 @@
             20%, 40%, 60%, 80% { transform: translateX(3px); }
         }
 
-        .shake {
-            animation: shake 0.5s;
+        .shake { animation: shake 0.5s; }
+
+        /* ─── Blizzard Mode ─── */
+        .blizzard-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        .blizzard-overlay.active {
+            opacity: 1;
         }
 
-        #obsession {
-            color: var(--accent2);
-            font-weight: 600;
-            animation: pulse 2s infinite;
+        .blizzard-overlay .snow-layer {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 40% 70%, white, transparent),
+                radial-gradient(1px 1px at 60% 10%, white, transparent),
+                radial-gradient(2px 2px at 80% 50%, white, transparent),
+                radial-gradient(1px 1px at 10% 80%, white, transparent),
+                radial-gradient(2px 2px at 70% 90%, white, transparent);
+            background-size: 200px 200px;
+            animation: blizzardFall 1.5s linear infinite;
+        }
+
+        .blizzard-overlay .snow-layer:nth-child(2) {
+            background-size: 300px 300px;
+            animation-duration: 2s;
+            animation-delay: 0.3s;
+            opacity: 0.6;
+        }
+
+        .blizzard-overlay .snow-layer:nth-child(3) {
+            background-size: 150px 150px;
+            animation-duration: 1s;
+            opacity: 0.3;
+        }
+
+        @keyframes blizzardFall {
+            to { transform: translateY(200px) translateX(30px); }
+        }
+
+        .blizzard-vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            box-shadow: inset 0 0 150px rgba(78, 205, 196, 0.15), inset 0 0 80px rgba(168, 85, 247, 0.1);
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .blizzard-vignette.active {
+            opacity: 1;
+        }
+
+        body.blizzard-shake {
+            animation: blizzardShake 0.1s linear infinite;
+        }
+
+        @keyframes blizzardShake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(1px, -1px); }
+            50% { transform: translate(-1px, 1px); }
+            75% { transform: translate(1px, 1px); }
+            100% { transform: translate(-1px, -1px); }
+        }
+
+        /* ─── Ski Game ─── */
+        .game-section {
+            flex-direction: column;
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .game-header {
+            margin-bottom: 24px;
+        }
+
+        .game-header h2 {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .game-header p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .game-container {
+            position: relative;
+            max-width: 400px;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        #skiGameCanvas {
+            display: block;
+            width: 100%;
+            background: linear-gradient(180deg, #0a1628 0%, #0f2847 100%);
+            cursor: none;
+        }
+
+        .game-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(5, 5, 10, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 2;
             transition: opacity 0.3s ease;
         }
 
-        @keyframes powderPop {
-            0% {
-                transform: translate(-50%, -50%) scale(0) rotate(-180deg);
-                opacity: 0;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1) rotate(0deg);
-                opacity: 1;
-            }
+        .game-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        @keyframes powderPopOut {
-            to {
-                transform: translate(-50%, -50%) scale(0) rotate(180deg);
-                opacity: 0;
-            }
+        .game-overlay h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
 
-        @media (min-width: 768px) {
-            .container {
-                padding: 40px 20px;
-            }
-
-            .status-bar {
-                flex-direction: row;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .status-item {
-                flex: 0 1 auto;
-            }
-
-            .fact-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+        .game-overlay .game-score-display {
+            font-family: 'SF Mono', monospace;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent2);
+            margin-bottom: 4px;
         }
 
-        @media (max-width: 768px) {
+        .game-overlay p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+
+        .game-btn {
+            background: linear-gradient(135deg, var(--accent2), var(--accent4));
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s var(--spring);
+        }
+
+        .game-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .game-hud {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            right: 16px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .game-hud span {
+            font-family: 'SF Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 640px) {
+            section {
+                padding: 32px 16px;
+            }
+
+            .hero {
+                padding-top: 0;
+            }
+
+            .hero-avatar {
+                font-size: 60px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .facts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .future-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-item {
+                padding: 0 24px;
+            }
+
+            .stat-value {
+                font-size: 1.1rem;
+            }
+
             .floating-widget {
-                padding: 8px 12px;
-                gap: 5px;
-            }
-
-            #widget-text {
-                font-size: 1.2rem;
+                padding: 10px 16px;
             }
 
             .widget-label {
                 font-size: 0.75rem;
             }
         }
+
+        @media (max-width: 400px) {
+            .facts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="avatar" id="avatar">🤷‍♂️</div>
-            <h1 id="greeting">Oh, hey there!</h1>
-            <p class="tagline" id="tagline">Jack of all trades, master of absolutely none</p>
-        </div>
+    <!-- Blizzard overlay -->
+    <div class="blizzard-vignette" id="blizzardVignette"></div>
+    <div class="blizzard-overlay" id="blizzardOverlay">
+        <div class="snow-layer"></div>
+        <div class="snow-layer"></div>
+        <div class="snow-layer"></div>
+    </div>
 
-        <div class="bio-card">
-            <p id="bio">Hong Kong → London. Stuck in the corporate grind by day, tinkering with random projects by night. All gear, no idea. Perpetually obsessed with <span id="obsession">skiing</span>.</p>
-        </div>
+    <!-- Ambient orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-        <div class="status-bar">
-            <div class="status-item">
-                <span class="status-emoji">📍</span>
-                <span>Current: <span id="location">London</span></span>
-            </div>
-            <div class="status-item">
-                <span class="status-emoji">🎿</span>
-                <span>Days to ski: <span id="skiDays">Calculating...</span></span>
-            </div>
-            <div class="status-item">
-                <span class="status-emoji">☕</span>
-                <span>Consumed today: <span id="coffeeCount">0.000</span></span>
-            </div>
-        </div>
+    <!-- Particles -->
+    <canvas id="particles"></canvas>
 
-        <div class="projects">
-            <h2>Stuff I Made <span class="subtitle">(with Claude doing 90% of the work)</span></h2>
+    <!-- ═══ HERO ═══ -->
+    <section class="hero">
+        <div class="hero-avatar" id="avatar">🤷‍♂️</div>
+        <h1 class="hero-title" id="greeting">Oh, hey there!</h1>
+        <p class="hero-tagline" id="tagline">Jack of all trades, master of absolutely none</p>
+        <p class="hero-bio" id="bio">Hong Kong → London. Stuck in the corporate grind by day, tinkering with random projects by night. All gear, no idea. Perpetually obsessed with <span id="obsession">skiing</span>.</p>
+        <div class="hero-scroll-hint">
+            <span>Scroll</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- ═══ STATS MARQUEE ═══ -->
+    <section class="stats-section">
+        <div class="stats-marquee" id="statsMarquee">
+            <div class="stat-item">
+                <span class="stat-emoji">🎿</span>
+                <div class="stat-content">
+                    <span class="stat-value" id="skiDays">---</span>
+                    <span class="stat-label">Days to ski</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+            <div class="stat-item">
+                <span class="stat-emoji">☕</span>
+                <div class="stat-content">
+                    <span class="stat-value" id="coffeeCount">0.00000</span>
+                    <span class="stat-label">Coffees today</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+            <div class="stat-item">
+                <span class="stat-emoji">📍</span>
+                <div class="stat-content">
+                    <span class="stat-value" style="color: var(--text); font-size: 1rem;">Somewhere between HK & London</span>
+                    <span class="stat-label">Location</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+            <div class="stat-item">
+                <span class="stat-emoji">💻</span>
+                <div class="stat-content">
+                    <span class="stat-value">90%</span>
+                    <span class="stat-label">Claude-powered</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+            <div class="stat-item">
+                <span class="stat-emoji">🏌️</span>
+                <div class="stat-content">
+                    <span class="stat-value">30</span>
+                    <span class="stat-label">Golf handicap (not a typo)</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+            <!-- Duplicate for seamless loop -->
+            <div class="stat-item">
+                <span class="stat-emoji">🎿</span>
+                <div class="stat-content">
+                    <span class="stat-value" id="skiDays2">---</span>
+                    <span class="stat-label">Days to ski</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+            <div class="stat-item">
+                <span class="stat-emoji">☕</span>
+                <div class="stat-content">
+                    <span class="stat-value" id="coffeeCount2">0.00000</span>
+                    <span class="stat-label">Coffees today</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+            <div class="stat-item">
+                <span class="stat-emoji">📍</span>
+                <div class="stat-content">
+                    <span class="stat-value" style="color: var(--text); font-size: 1rem;">Somewhere between HK & London</span>
+                    <span class="stat-label">Location</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+            <div class="stat-item">
+                <span class="stat-emoji">💻</span>
+                <div class="stat-content">
+                    <span class="stat-value">90%</span>
+                    <span class="stat-label">Claude-powered</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+            <div class="stat-item">
+                <span class="stat-emoji">🏌️</span>
+                <div class="stat-content">
+                    <span class="stat-value">30</span>
+                    <span class="stat-label">Golf handicap (not a typo)</span>
+                </div>
+            </div>
+            <span class="stat-divider">·</span>
+        </div>
+    </section>
+
+    <!-- ═══ SKI COUNTDOWN ═══ -->
+    <section class="ski-section" id="skiCard" data-mood="despair">
+        <div class="section-inner" data-reveal>
+            <div class="ski-label">🎿 Next ski trip in</div>
+            <div class="ski-number" id="skiNumber">---</div>
+            <div class="ski-unit">days</div>
+            <div class="ski-mood" id="skiMood">Loading...</div>
+        </div>
+    </section>
+
+    <!-- ═══ PROJECTS ═══ -->
+    <section class="projects-section">
+        <div class="section-inner">
+            <div class="projects-header" data-reveal>
+                <h2>Stuff I Made</h2>
+                <p class="subtitle">(with Claude doing 90% of the work)</p>
+            </div>
 
             <div class="project-list">
                 <a href="https://chitintim.github.io/trips/" class="project-item" target="_blank">
@@ -489,36 +1103,28 @@
                     </div>
                 </a>
 
-                <a href="https://chitintim.github.io/sail/" class="project-item" target="_blank">
-                    <div class="project-emoji">⛵</div>
-                    <div class="project-info">
-                        <h3>Sailing GPS Tracker</h3>
-                        <p>Real-time navigation & performance tracking (works better than my actual sailing)</p>
-                    </div>
+                <a href="https://chitintim.github.io/sail/" class="project-card" target="_blank" data-reveal data-delay="2">
+                    <span class="project-emoji">⛵</span>
+                    <h3>Sailing GPS Tracker</h3>
+                    <p>Real-time navigation & performance tracking (works better than my actual sailing)</p>
                 </a>
 
-                <a href="https://chitintim.github.io/japan26-ski-w1/" class="project-item" target="_blank">
-                    <div class="project-emoji">🗾</div>
-                    <div class="project-info">
-                        <h3>Japan 2026 Ski Trip</h3>
-                        <p>March powder hunt in Hokkaido/Nagano with cost calculator (£2.3-3.7k damage)</p>
-                    </div>
+                <a href="https://chitintim.github.io/japan26-ski-w1/" class="project-card" target="_blank" data-reveal data-delay="3">
+                    <span class="project-emoji">🗾</span>
+                    <h3>Japan 2026 Ski Trip</h3>
+                    <p>March powder hunt in Hokkaido/Nagano with cost calculator (£2.3-3.7k damage)</p>
                 </a>
 
-                <a href="https://chitintim.github.io/dec25-ski/" class="project-item" target="_blank">
-                    <div class="project-emoji">🎿</div>
-                    <div class="project-info">
-                        <h3>La Tania Christmas '25</h3>
-                        <p>Dec 20-27 ski-in/out chalet for 8 mates (before the crowds arrive)</p>
-                    </div>
+                <a href="https://chitintim.github.io/dec25-ski/" class="project-card" target="_blank" data-reveal data-delay="4">
+                    <span class="project-emoji">🎿</span>
+                    <h3>La Tania Christmas '25</h3>
+                    <p>Dec 20-27 ski-in/out chalet for 8 mates (before the crowds arrive)</p>
                 </a>
 
-                <a href="https://chitintim.github.io/dec25-ski-group2/" class="project-item" target="_blank">
-                    <div class="project-emoji">⛷️</div>
-                    <div class="project-info">
-                        <h3>NYE La Tania Trip</h3>
-                        <p>Dec 28-Jan 4 group trip, Chalet Le Koala, 10-12 people (peak season madness)</p>
-                    </div>
+                <a href="https://chitintim.github.io/dec25-ski-group2/" class="project-card" target="_blank" data-reveal data-delay="5">
+                    <span class="project-emoji">⛷️</span>
+                    <h3>NYE La Tania Trip</h3>
+                    <p>Dec 28-Jan 4 group trip, Chalet Le Koala, 10-12 people (peak season madness)</p>
                 </a>
 
                 <a href="https://chitintim.github.io/temple/" class="project-item" target="_blank">
@@ -538,48 +1144,66 @@
                 </a>
             </div>
         </div>
+    </section>
 
-        <div class="random-section">
-            <h2>Random Facts Nobody Asked For</h2>
-            <div class="fact-grid">
-                <div class="fact-card" data-fact="pilot">
+    <!-- ═══ FACTS ═══ -->
+    <section class="facts-section">
+        <div class="section-inner">
+            <div class="facts-header" data-reveal>
+                <h2>Random Facts Nobody Asked For</h2>
+            </div>
+
+            <div class="facts-grid">
+                <div class="fact-card" data-fact="pilot" data-reveal data-delay="1">
                     <span class="fact-emoji">✈️</span>
                     <p>Has a PPL but scared of heights</p>
                 </div>
-                <div class="fact-card" data-fact="consultant">
+
+                <div class="fact-card" data-fact="consultant" data-reveal data-delay="2">
                     <span class="fact-emoji">📊</span>
                     <p>Makes slides for a living (kill me)</p>
                 </div>
-                <div class="fact-card" data-fact="3d">
+
+                <div class="fact-card" data-fact="3d" data-reveal data-delay="3">
                     <span class="fact-emoji">🖨️</span>
                     <p>3D prints useless stuff at 2am</p>
                 </div>
-                <div class="fact-card" data-fact="golf">
+
+                <div class="fact-card" data-fact="golf" data-reveal data-delay="4">
                     <span class="fact-emoji">🏌️</span>
                     <p>30 handicap (that's not a typo)</p>
                 </div>
-                <div class="fact-card" data-fact="spontaneous">
+
+                <div class="fact-card" data-fact="spontaneous" data-reveal data-delay="5">
                     <span class="fact-emoji">🎲</span>
                     <p>Books flights at 2am on impulse</p>
                 </div>
-                <div class="fact-card" data-fact="code">
+
+                <div class="fact-card" data-fact="code" data-reveal data-delay="6">
                     <span class="fact-emoji">💻</span>
                     <p>Copies code from Stack Overflow</p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="future-projects">
-            <h2>Things I'm Probably Building Next</h2>
-            <div class="future-list">
-                <div class="future-item">
+    <!-- ═══ FUTURE ═══ -->
+    <section class="future-section">
+        <div class="section-inner">
+            <div class="future-header" data-reveal>
+                <h2>Things I'm Probably Building Next</h2>
+            </div>
+
+            <div class="future-grid">
+                <div class="future-card" data-reveal data-delay="1">
                     <span class="future-emoji">🚨</span>
                     <div>
                         <h4>Powder Alarm</h4>
                         <p>Auto-books Friday 8:05pm flight to Geneva when it dumps</p>
                     </div>
                 </div>
-                <div class="future-item">
+
+                <div class="future-card" data-reveal data-delay="2">
                     <span class="future-emoji">✈️</span>
                     <div>
                         <h4>Flight Deal Finder</h4>
@@ -588,13 +1212,44 @@
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="bottom-section">
-            <p>Find me on <a href="https://github.com/chitintim" target="_blank">GitHub</a> where I commit crimes against code</p>
-            <p class="tiny-text">This page changes based on my mood. Refresh for chaos.</p>
+    <!-- ═══ SKI GAME ═══ -->
+    <section class="game-section">
+        <div class="section-inner">
+            <div class="game-header" data-reveal>
+                <h2>Fun Corner</h2>
+                <p>Endless downhill. Dodge trees. Chase powder. How far can you go?</p>
+            </div>
+
+            <div class="game-container" data-reveal data-delay="1">
+                <div class="game-hud" id="gameHud" style="display:none;">
+                    <span id="gameScore">0m</span>
+                    <span id="gameSpeed">0 km/h</span>
+                </div>
+                <canvas id="skiGameCanvas" width="400" height="500"></canvas>
+                <div class="game-overlay" id="gameOverlay">
+                    <h3>⛷️ Powder Run</h3>
+                    <p>Tilt your phone, tap, or use ← → to steer</p>
+                    <button class="game-btn" id="gameStartBtn">Hit the slopes</button>
+                </div>
+                <div class="game-overlay hidden" id="gameOverOverlay">
+                    <h3>🌲 TREE'D!</h3>
+                    <div class="game-score-display" id="gameFinalScore">0m</div>
+                    <p id="gameComment">Not bad for someone with no talent</p>
+                    <button class="game-btn" id="gameRestartBtn">Try again</button>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
+    <!-- ═══ FOOTER ═══ -->
+    <section class="footer-section">
+        <p>Find me on <a href="https://github.com/chitintim" target="_blank">GitHub</a> where I commit crimes against code</p>
+        <p class="footer-tiny">This page changes based on my mood. Refresh for chaos.</p>
+    </section>
+
+    <!-- Floating Widget -->
     <div class="floating-widget" id="widget" onclick="makeItRain()">
         <span id="widget-text">❄️</span>
         <span class="widget-label">Make it rain</span>
