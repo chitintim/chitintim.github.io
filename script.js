@@ -986,30 +986,30 @@ function makeItRain() {
         ctx.shadowColor = 'rgba(78, 205, 196, 0.3)';
         ctx.shadowBlur = 10;
 
-        // Skis — long, parallel, slightly angled with the lean
+        // Skis — bright, long
         ctx.shadowBlur = 0;
-        ctx.strokeStyle = '#d0d8e0';
+        ctx.strokeStyle = '#ff6b6b';
         ctx.lineWidth = 2.5;
         ctx.lineCap = 'round';
         // Left ski
         ctx.beginPath();
-        ctx.moveTo(-5, -8);
-        ctx.lineTo(-6, 14);
+        ctx.moveTo(-5, -12);
+        ctx.lineTo(-6, 20);
         ctx.stroke();
         // Right ski
         ctx.beginPath();
-        ctx.moveTo(5, -8);
-        ctx.lineTo(4, 14);
+        ctx.moveTo(5, -12);
+        ctx.lineTo(4, 20);
         ctx.stroke();
         // Ski tips (curved front)
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(-6, 14);
-        ctx.quadraticCurveTo(-7, 17, -5, 18);
+        ctx.moveTo(-6, 20);
+        ctx.quadraticCurveTo(-7, 24, -5, 25);
         ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(4, 14);
-        ctx.quadraticCurveTo(3, 17, 5, 18);
+        ctx.moveTo(4, 20);
+        ctx.quadraticCurveTo(3, 24, 5, 25);
         ctx.stroke();
 
         // Legs — slightly bent (ski stance)
